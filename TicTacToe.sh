@@ -15,6 +15,7 @@ player1Name=""
 player2Name=""
 player1Sign=""
 player2Sign=""
+turnCount=0
 
 function playerAssign(){
 printf "Enter the first player name:\n"
@@ -34,6 +35,44 @@ if [ $randomNumber -eq 0 ]
 fi
 printf "$player1Name = $player1Sign is Assigned\n"
 printf "$player2Name = $player2Sign is Assigned\n"
+begin
+}
+
+function playerName(){
+if [ $1 == $player1Sign ]
+   then
+      echo $player1Name
+   else
+      echo $player2Name
+fi
+}
+
+#GAME BEGIN
+function begin(){
+while [ $turnCount -ne 2 ]
+do
+   if [ $turnCount -eq 0 ]
+      then
+         randomNumber=$(( RANDOM%2 ))
+         if [ $randomNumber -eq 0 ]
+            then
+               play $player1Sign 
+            else  
+               play $player2Sign
+         fi
+         (( turnCount++ ))
+      else 
+         (( turnCount++ ))
+   fi
+done
+}
+
+#PLAY
+function play(){
+board
+printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:\n"
+read position
+printf "position $position is selected\n"
 }
 
 #SHOW BOARD
@@ -41,9 +80,7 @@ function board(){
 printf "[ $firstBlock ] [ $secondBlock ] [ $thirdBlock ] \n"
 printf "[ $fourthBlock ] [ $fifthBlock ] [ $sixthBlock ] \n"
 printf "[ $seventhBlock ] [ $eigthBlock ] [ $nineBlock ] \n"
-playerAssign
 }
 
-
-
 board
+playerAssign
