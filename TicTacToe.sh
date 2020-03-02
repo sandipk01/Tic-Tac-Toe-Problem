@@ -134,26 +134,41 @@ do
    if [[ ${board[1]} == $1 && ${board[2]} == $1 && ${board[3]} == $1 ]]
       then
          isWin=1
-     # elif [ "${board[4]}" -eq $1 -a "${board[5]}" -eq $1 -a "${board[6]}" -eq $1 ]
-     #    then
-     #       isWin=1
-     # elif [ "${board[7]}" -eq $1 -a "${board[8]}" -eq $1 -a "${board[9]}" -eq $1 ]
-     #    then
-     #       isWin=1
-     # elif [ "${board[1]}" -eq $1 -a "${board[4]}" -eq $1 -a "${board[7]}" -eq $1 ]
-     #    then
-      #      isWin=1
-     # elif [ "${board[2]}" -eq $1 -a "${board[5]}" -eq $1 -a "${board[8]} -eq $1 ]
-     #    then 
-     #       isWin=1
-     # elif [ ${board[3]} -eq $1 -a ${board[6]} -eq $1 -a ${board[9]} -eq $1 ]
-     #       isWin=1
+         break
+      elif [[ ${board[4]} == $1 && ${board[5]} == $1 && ${board[6]} == $1 ]]
+         then
+            isWin=1
+            break
+      elif [[ ${board[7]} == $1 && ${board[8]} == $1 && ${board[9]} == $1 ]]
+         then
+            isWin=1
+            break
+      elif [[ ${board[1]} == $1 && ${board[4]} == $1 && ${board[7]} == $1 ]]
+         then
+            isWin=1
+            break
+      elif [[ ${board[2]} == $1 && ${board[5]} == $1 && ${board[8]} == $1 ]]
+         then 
+            isWin=1
+            break
+      elif [[ ${board[3]} == $1 && ${board[6]} == $1 && ${board[9]} == $1 ]]
+         then
+            isWin=1
+            break
+      elif [[ ${board[1]} == $1 && ${board[5]} == $1 && ${board[9]} == $1 ]]
+         then
+            isWin=1
+            break
+      elif [[ ${board[3]} == $1 && ${board[5]} == $1 && ${board[7]} == $1 ]]
+         then
+            isWin=1
+            break      
       else
             isWin=0
             break
    fi
-   echo $isWin
 done
+echo $isWin
 }
 
 #SHOW BOARD
