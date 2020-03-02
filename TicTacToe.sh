@@ -57,12 +57,11 @@ function changePlayer(){
          echo $player1Sign
    fi
 }
-
-#GAME BEGIN
-function begin(){
-while [ $turnCount -ne 9 ]
-do
-   if [ $turnCount -eq 1 ]
+ 
+ function begin(){
+ while [ $turnCount -ne 9 ]
+ do   
+   if [ $turnCount -eq 0 ]
       then
          randomNumber=$(( RANDOM%2 ))
          if [ $randomNumber -eq 0 ]
@@ -80,15 +79,35 @@ do
          (( turnCount++ ))
    fi
 done
+board
+}
+
+function play(){
+board
+printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:\n"
+read position
+if [[ $position -lt 0 || $position -gt 9 ]]
+   then
+      printf '%s\n' "--------- Please enter valid number between 1-9 -----------\n"
+      play $1
+   else
+      if [[ ${board[$position]} == "X" || ${board[$position]} == "0" ]]
+         then 
+            printf '%s\n' "----------- position is alrady assigned please select another position ---------------\n"
+            play $1
+         else  
+            board[$position]=$1
+      fi
+fi
 }
 
 function checkValidPosition(){
-if [ $1 -lt 0 -a $1 -gt 9 ]
+if [[ $1 < 0 || $1 > 9 ]]
    then
-      printf "Enter The valid position\n"
+      printf "Enter the Valid Number between 1-9\n"
       play $2
    else
-      if [ $(( ${board[$1]} )) -eq "X" -o $(( ${board[$1]} )) -eq "0" ]
+      if [[ ${board[$2]} == "X" || ${board[$2]} == "0" ]]
          then 
             printf "position is alrady occupied please chech the board and enter empty position\n"
             play $2
@@ -98,20 +117,11 @@ if [ $1 -lt 0 -a $1 -gt 9 ]
 fi
 }
 
-#PLAY
-function play(){
-board
-printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:\n"
-read position
-validatedPosition="$(checkValidPosition $position $1)"
-board[$validatedPosition]=$1
-}
-
-#SHOW BOARD
+#PLAY#SHOW BOARD
 function board(){
-printf "[ ${board[1]} ] [ ${board[2]} ] [ ${board[3]} ] \n"
-printf "[ ${board[4]} ] [ ${board[5]} ] [ ${board[6]} ] \n"
-printf "[ ${board[7]} ] [ ${board[8]} ] [ ${board[9]} ] \n"
+printf " ${board[1]} | ${board[2]} | ${board[3]} \n"
+printf " ${board[4]} | ${board[5]} | ${board[6]} \n"
+printf " ${board[7]} | ${board[8]} | ${board[9]} \n"
 }
 
 board
