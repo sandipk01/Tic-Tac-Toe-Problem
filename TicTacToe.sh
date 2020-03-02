@@ -214,6 +214,7 @@ done
 echo $isWin
 }
 
+#Box IS EMPTY
 function isEmpty(){
 if [[ "${board[$1]}" != "X" && "${board[$1]}" != "0" ]]
    then  
@@ -225,10 +226,57 @@ fi
 
 #MAKE COMPUTER WIN
 function computerWin(){
-if [ "${board[1]}" == $1 && "${board[2]}" == $1 && "$( isEmpty 3 )" == true ]
+if [[ "${board[1]}" == $1 && "${board[2]}" == $1 && "$( isEmpty 3 )" == true ]]
    then
-      board[3]=$1
+      echo 3
+   elif [[ "${board[1]}" == $1 && "${board[3]}" == $1 && "$( isEmpty 2 )" == true ]]
+   then
+      echo 2
+   elif [[ "${board[2]}" == $1 && "${board[3]}" == $1 && "$( isEmpty 1 )" == true ]]
+   then
+      echo 1
+   elif [[ "${board[4]}" == $1 && "${board[5]}" == $1 && "$( isEmpty 6 )" == true ]]
+   then
+      echo 6
+   elif [[ "${board[4]}" == $1 && "${board[6]}" == $1 && "$( isEmpty 5 )" == true ]]
+   then
+      echo 5
+   elif [[ "${board[5]}" == $1 && "${board[6]}" == $1 && "$( isEmpty 4 )" == true ]]
+   then
+      echo 4
+   elif [[ "${board[7]}" == $1 && "${board[8]}" == $1 && "$( isEmpty 9 )" == true ]]
+   then
+      echo 9
+   elif [[ "${board[7]}" == $1 && "${board[9]}" == $1 && "$( isEmpty 8 )" == true ]]
+   then
+      echo 8
+   elif [[ "${board[8]}" == $1 && "${board[9]}" == $1 && "$( isEmpty 7 )" == true ]]
+   then
+      echo 7
+   elif [[ "${board[1]}" == $1 && "${board[5]}" == $1 && "$( isEmpty 9 )" == true ]]
+   then
+      echo 9
+   elif [[ "${board[1]}" == $1 && "${board[9]}" == $1 && "$( isEmpty 5 )" == true ]]
+   then
+      echo 5
+   elif [[ "${board[5]}" == $1 && "${board[9]}" == $1 && "$( isEmpty 1 )" == true ]]
+   then
+      echo 1
+   elif [[ "${board[3]}" == $1 && "${board[5]}" == $1 && "$( isEmpty 9 )" == true ]]
+   then
+      echo 9
+   elif [[ "${board[3]}" == $1 && "${board[9]}" == $1 && "$( isEmpty 5 )" == true ]]
+   then
+      echo 5
+   elif [[ "${board[5]}" == $1 && "${board[9]}" == $1 && "$( isEmpty 3 )" == true ]]
+   then
+      echo 3
 fi
+}
+
+#MAKE COMPUTER WIN
+function computerWin(){
+   
 }
 
 #SHOW BOARD
