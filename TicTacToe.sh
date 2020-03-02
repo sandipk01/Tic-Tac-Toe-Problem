@@ -17,6 +17,7 @@ player2Name=""
 player1Sign=""
 player2Sign=""
 turnCount=0
+computer="computer"
 currentPlayer=""
 
 #ASSIGNED PLAYERS
@@ -27,6 +28,25 @@ printf "Enter The second player name:\n"
 read inputPlayer2
 player1Name=$inputPlayer1
 player2Name=$inputPlayer2
+randomNumber=$(( RANDOM%2 ))
+if [ $randomNumber -eq 0 ]
+   then
+      player1Sign="X"
+      player2Sign="0"
+   else
+      player1Sign="0"
+      player2Sign="X"
+fi
+printf "$player1Name = $player1Sign is Assigned\n"
+printf "$player2Name = $player2Sign is Assigned\n"
+begin
+}
+
+function playerAssignWithComputer(){
+printf "Enter the player name:\n"
+read inputPlayer1
+player1Name=$inputPlayer1
+player2Name=$computer
 randomNumber=$(( RANDOM%2 ))
 if [ $randomNumber -eq 0 ]
    then
@@ -106,22 +126,40 @@ done
 board
 }
 
+
 #PLAY
 function play(){
 board
-printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:"
-read position
-if [[ $position -lt 0 || $position -gt 9 ]]
+local isStop=0
+#COMPUTER PLAY
+if [[ "$( playerName $1 )" == $computer ]]
    then
-      printf '%s\n' "--------- Please enter valid number between 1-9 -----------\n"
-      play $1
+      printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:\n"
+      while [[ $isStop == 0 ]]
+      do
+         randomNumber=$(( ( RANDOM%9 ) + 1 ))
+            if [[ "${board[$randomNumber]}" != "X" && "${board[$randomNumber]}" != "0" ]]
+               then
+                  isStop=1 
+                  board[$randomNumber]=$1
+                  break
+            fi
+      done
    else
-      if [[ ${board[$position]} == "X" || ${board[$position]} == "0" ]]
-         then 
-            printf '%s\n' "----------- position is alrady assigned please select another position ---------------\n"
+      printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:\n"
+      read position
+      if [[ $position -lt 0 || $position -gt 9 ]]
+         then
+            printf '%s\n' "--------- Please enter valid number between 1-9 -----------\n"
             play $1
-         else  
-            board[$position]=$1
+         else
+            if [[ ${board[$position]} == "X" || ${board[$position]} == "0" ]]
+               then 
+                  printf '%s\n' "----------- position is alrady assigned please select another position ---------------\n"
+                  play $1
+               else  
+                  board[$position]=$1
+            fi
       fi
 fi
 }
@@ -178,5 +216,16 @@ printf " ${board[4]}  |  ${board[5]}  |  ${board[6]} \n"
 printf " ${board[7]}  |  ${board[8]}  |  ${board[9]} \n"
 }
 
-board
-playerAssign
+printf "you want to play with human or computer?\n"
+printf "1 - for with human\n"
+printf "2 - for with computer\n"
+read choice
+case $choice in
+   1)
+   board
+   playerAssign
+   ;;
+   2)
+   board
+   playerAssignWithComputer
+esac
