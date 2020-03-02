@@ -3,15 +3,15 @@ printf '%s\n' "------------------  Tic-Tac-Toe  -----------------"
 
 #VARIABLES
 declare -a board
-board[1]="1"
-board[2]="2"
-board[3]="3"
-board[4]="4"
-board[5]="5"
-board[6]="6"
-board[7]="7"
-board[8]="8"
-board[9]="9"
+board[1]="-"
+board[2]="-"
+board[3]="-"
+board[4]="-"
+board[5]="-"
+board[6]="-"
+board[7]="-"
+board[8]="-"
+board[9]="-"
 player1Name=""
 player2Name=""
 player1Sign=""
@@ -63,6 +63,7 @@ function changePlayer(){
  
 #BEGIN GAME
 function begin(){
+local isWin=0
 while [ $turnCount -ne 9 ]
 do   
    if [ $turnCount -eq 0 ]
@@ -79,17 +80,36 @@ do
          (( turnCount++ ))
       else 
         currentPlayer="$( changePlayer $currentPlayer )"
-        play $currentPlayer 
-         (( turnCount++ ))
+        isWin="$( checkWin $currentPlayer )"
+         if [[ $isWin == 1 ]]
+            then
+               printf "$( playerName $currentPlayer ) is Winner\n"
+               break
+            else
+               play $currentPlayer
+               isWin="$( checkWin $currentPlayer )"
+                  if [[ $isWin == 1 ]]
+                     then
+                        printf "$( playerName $currentPlayer ) is Winner\n"
+                        break
+                     else
+                        (( turnCount++ ))
+                  fi
+         fi      
    fi
+   isWin=0
 done
+   if [[ $isWin == 0 ]]
+      then
+         printf "Match is Tie\n"
+   fi
 board
 }
 
 #PLAY
 function play(){
 board
-printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:\n"
+printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:"
 read position
 if [[ $position -lt 0 || $position -gt 9 ]]
    then
@@ -106,11 +126,41 @@ if [[ $position -lt 0 || $position -gt 9 ]]
 fi
 }
 
+#CHECK WINNER OR TIE
+function checkWin(){
+local isWin=0
+while [[ $isWin == 0 ]]
+do
+   if [[ ${board[1]} == $1 && ${board[2]} == $1 && ${board[3]} == $1 ]]
+      then
+         isWin=1
+     # elif [ "${board[4]}" -eq $1 -a "${board[5]}" -eq $1 -a "${board[6]}" -eq $1 ]
+     #    then
+     #       isWin=1
+     # elif [ "${board[7]}" -eq $1 -a "${board[8]}" -eq $1 -a "${board[9]}" -eq $1 ]
+     #    then
+     #       isWin=1
+     # elif [ "${board[1]}" -eq $1 -a "${board[4]}" -eq $1 -a "${board[7]}" -eq $1 ]
+     #    then
+      #      isWin=1
+     # elif [ "${board[2]}" -eq $1 -a "${board[5]}" -eq $1 -a "${board[8]} -eq $1 ]
+     #    then 
+     #       isWin=1
+     # elif [ ${board[3]} -eq $1 -a ${board[6]} -eq $1 -a ${board[9]} -eq $1 ]
+     #       isWin=1
+      else
+            isWin=0
+            break
+   fi
+   echo $isWin
+done
+}
+
 #SHOW BOARD
 function board(){
-printf " ${board[1]} | ${board[2]} | ${board[3]} \n"
-printf " ${board[4]} | ${board[5]} | ${board[6]} \n"
-printf " ${board[7]} | ${board[8]} | ${board[9]} \n"
+printf " ${board[1]}  |  ${board[2]}  |  ${board[3]} \n"
+printf " ${board[4]}  |  ${board[5]}  |  ${board[6]} \n"
+printf " ${board[7]}  |  ${board[8]}  |  ${board[9]} \n"
 }
 
 board
