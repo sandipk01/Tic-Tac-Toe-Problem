@@ -19,6 +19,7 @@ player2Sign=""
 turnCount=0
 currentPlayer=""
 
+#ASSIGNED PLAYERS
 function playerAssign(){
 printf "Enter the first player name:\n"
 read inputPlayer1
@@ -40,6 +41,7 @@ printf "$player2Name = $player2Sign is Assigned\n"
 begin
 }
 
+#CHECK PLAYER NAME WITH SIGN
 function playerName(){
 if [[ $1 == $player1Sign ]]
    then
@@ -49,6 +51,7 @@ if [[ $1 == $player1Sign ]]
 fi
 }
 
+#CHANGE PLAYER SIGN
 function changePlayer(){
    if [[ $1 == $player1Sign ]]
       then 
@@ -58,9 +61,10 @@ function changePlayer(){
    fi
 }
  
- function begin(){
- while [ $turnCount -ne 9 ]
- do   
+#BEGIN GAME
+function begin(){
+while [ $turnCount -ne 9 ]
+do   
    if [ $turnCount -eq 0 ]
       then
          randomNumber=$(( RANDOM%2 ))
@@ -82,6 +86,7 @@ done
 board
 }
 
+#PLAY
 function play(){
 board
 printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:\n"
@@ -101,23 +106,7 @@ if [[ $position -lt 0 || $position -gt 9 ]]
 fi
 }
 
-function checkValidPosition(){
-if [[ $1 < 0 || $1 > 9 ]]
-   then
-      printf "Enter the Valid Number between 1-9\n"
-      play $2
-   else
-      if [[ ${board[$2]} == "X" || ${board[$2]} == "0" ]]
-         then 
-            printf "position is alrady occupied please chech the board and enter empty position\n"
-            play $2
-         else  
-            echo $1
-      fi
-fi
-}
-
-#PLAY#SHOW BOARD
+#SHOW BOARD
 function board(){
 printf " ${board[1]} | ${board[2]} | ${board[3]} \n"
 printf " ${board[4]} | ${board[5]} | ${board[6]} \n"
