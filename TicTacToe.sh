@@ -20,7 +20,7 @@ turnCount=0
 computer="computer"
 currentPlayer=""
 
-#ASSIGNED PLAYERS
+#ASSIGNED SIGN TO FIRST AND SECOND PLAYER
 function playerAssign(){
 printf "Enter the first player name:\n"
 read inputPlayer1
@@ -42,6 +42,7 @@ printf "$player2Name = $player2Sign is Assigned\n"
 begin
 }
 
+#ASSIGNING SIGN TO PLAYER AND COMPUTER
 function playerAssignWithComputer(){
 printf "Enter the player name:\n"
 read inputPlayer1
@@ -84,8 +85,10 @@ function changePlayer(){
 #BEGIN GAME
 function begin(){
 local isWin=0
+#LOOPING TILL ALL POSITION NOT GETS FULL
 while [ $turnCount -ne 9 ]
-do   
+do 
+   #WHO IS PLAYING FIRST
    if [ $turnCount -eq 0 ]
       then
          randomNumber=$(( RANDOM%2 ))
@@ -99,7 +102,9 @@ do
          fi
          (( turnCount++ ))
       else 
+        #SWITCHING PLAYER
         currentPlayer="$( changePlayer $currentPlayer )"
+        #CHECK IF PLAYER IS WIN
         isWin="$( checkWin $currentPlayer )"
          if [[ $isWin == 1 ]]
             then
@@ -207,6 +212,23 @@ do
    fi
 done
 echo $isWin
+}
+
+function isEmpty(){
+if [[ "${board[$1]}" != "X" && "${board[$1]}" != "0" ]]
+   then  
+      echo true
+   else
+      echo false
+fi
+}
+
+#MAKE COMPUTER WIN
+function computerWin(){
+if [ "${board[1]}" == $1 && "${board[2]}" == $1 && "$( isEmpty 3 )" == true ]
+   then
+      board[3]=$1
+fi
 }
 
 #SHOW BOARD
