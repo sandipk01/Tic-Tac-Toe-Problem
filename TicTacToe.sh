@@ -22,44 +22,34 @@ currentPlayer=""
 
 #ASSIGNED SIGN TO FIRST AND SECOND PLAYER
 function playerAssign(){
-printf "Enter the first player name:\n"
-read inputPlayer1
-printf "Enter The second player name:\n"
-read inputPlayer2
-player1Name=$inputPlayer1
-player2Name=$inputPlayer2
-randomNumber=$(( RANDOM%2 ))
-if [ $randomNumber -eq 0 ]
-   then
-      player1Sign="X"
-      player2Sign="0"
-   else
-      player1Sign="0"
-      player2Sign="X"
-fi
-printf "$player1Name = $player1Sign is Assigned\n"
-printf "$player2Name = $player2Sign is Assigned\n"
-begin
-}
-
-#ASSIGNING SIGN TO PLAYER AND COMPUTER
-function playerAssignWithComputer(){
-printf "Enter the player name:\n"
-read inputPlayer1
-player1Name=$inputPlayer1
-player2Name=$computer
-randomNumber=$(( RANDOM%2 ))
-if [ $randomNumber -eq 0 ]
-   then
-      player1Sign="X"
-      player2Sign="0"
-   else
-      player1Sign="0"
-      player2Sign="X"
-fi
-printf "$player1Name = $player1Sign is Assigned\n"
-printf "$player2Name = $player2Sign is Assigned\n"
-begin
+   local gameMode=$1
+   if [[ $gameMode == 1 ]]
+      then
+         printf "Enter the first player name:\n"
+         read inputPlayer1
+         printf "Enter The second player name:\n"
+         read inputPlayer2
+         player1Name=$inputPlayer1
+         player2Name=$inputPlayer2
+      elif [[ $gameMode == 2 ]]
+         then
+            printf "Enter yout Player name:\n"
+            read inputPlayer1
+            player1Name=$inputPlayer1
+            player2Name="computer"
+   fi
+         randomNumber=$(( RANDOM%2 ))
+   if [ $randomNumber -eq 0 ]
+      then
+         player1Sign="X"
+         player2Sign="0"
+      else
+         player1Sign="0"
+         player2Sign="X"
+   fi
+   printf "$player1Name = $player1Sign is Assigned\n"
+   printf "$player2Name = $player2Sign is Assigned\n"
+   begin
 }
 
 #CHECK PLAYER NAME WITH SIGN
@@ -131,7 +121,6 @@ done
 board
 }
 
-
 #PLAY
 function play(){
 board
@@ -142,7 +131,12 @@ if [[ "$( playerName $1 )" == $computer ]]
       printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:\n"
       while [[ $isStop == 0 ]]
       do
-         randomNumber=$(( ( RANDOM%9 ) + 1 ))
+         if [[ "$( computerWin $1 )" == 0 ]]
+            then
+               randomNumber=$(( ( RANDOM%9 ) + 1 ))
+            else
+               randomNumber="$( computerWin $1 )"
+         fi
             if [[ "${board[$randomNumber]}" != "X" && "${board[$randomNumber]}" != "0" ]]
                then
                   isStop=1 
@@ -170,113 +164,118 @@ fi
 }
 
 #CHECK WINNER OR TIE
-function checkWin(){
-local isWin=0
-while [[ $isWin == 0 ]]
-do
-   if [[ ${board[1]} == $1 && ${board[2]} == $1 && ${board[3]} == $1 ]]
-      then
-         isWin=1
-         break
-      elif [[ ${board[4]} == $1 && ${board[5]} == $1 && ${board[6]} == $1 ]]
+function checkWin()
+{
+   local isWin=0
+   local player=$1
+   local row=1
+   local column=1
+   while [[ $row -le 9 ]]
+   do
+      if [[ "${board[$row]}" == $player && "${board[$(( $row + 1 ))]}" == $player && "${board[$(( $row + 2 ))]}" == $player ]] 
          then
             isWin=1
             break
-      elif [[ ${board[7]} == $1 && ${board[8]} == $1 && ${board[9]} == $1 ]]
+      fi
+      row=$(( $row + 3 ))  
+   done
+   while [[ $column -le 3 ]]
+   do
+      if [[ "${board[$column]}" == $player && "${board[$(( $column + 3 ))]}" == $player && "${board[$(( $column + 6 ))]}" == $player ]] 
          then
             isWin=1
             break
-      elif [[ ${board[1]} == $1 && ${board[4]} == $1 && ${board[7]} == $1 ]]
+      fi
+      column=$(( $column + 1 ))
+   done
+   #FOR CROSS WINING CHECK 
+   if [[ "${board[1]}" == $player && "${board[5]}" == $player && "${board[9]}" == $player ]] 
          then
             isWin=1
-            break
-      elif [[ ${board[2]} == $1 && ${board[5]} == $1 && ${board[8]} == $1 ]]
-         then 
-            isWin=1
-            break
-      elif [[ ${board[3]} == $1 && ${board[6]} == $1 && ${board[9]} == $1 ]]
+         elif [[ "${board[3]}" == $player && "${board[5]}" == $player && "${board[7]}" == $player ]] 
          then
             isWin=1
-            break
-      elif [[ ${board[1]} == $1 && ${board[5]} == $1 && ${board[9]} == $1 ]]
-         then
-            isWin=1
-            break
-      elif [[ ${board[3]} == $1 && ${board[5]} == $1 && ${board[7]} == $1 ]]
-         then
-            isWin=1
-            break      
-      else
-            isWin=0
-            break
    fi
-done
-echo $isWin
+   echo $isWin
 }
 
 #Box IS EMPTY
-function isEmpty(){
-if [[ "${board[$1]}" != "X" && "${board[$1]}" != "0" ]]
-   then  
-      echo true
-   else
-      echo false
-fi
+function isEmpty()
+{
+   if [[ "${board[$1]}" != "X" && "${board[$1]}" != "0" ]]
+      then  
+         echo true
+      else
+         echo false
+   fi
 }
 
 #MAKE COMPUTER WIN
 function computerWin(){
-if [[ "${board[1]}" == $1 && "${board[2]}" == $1 && "$( isEmpty 3 )" == true ]]
-   then
-      echo 3
-   elif [[ "${board[1]}" == $1 && "${board[3]}" == $1 && "$( isEmpty 2 )" == true ]]
-   then
-      echo 2
-   elif [[ "${board[2]}" == $1 && "${board[3]}" == $1 && "$( isEmpty 1 )" == true ]]
-   then
-      echo 1
-   elif [[ "${board[4]}" == $1 && "${board[5]}" == $1 && "$( isEmpty 6 )" == true ]]
-   then
-      echo 6
-   elif [[ "${board[4]}" == $1 && "${board[6]}" == $1 && "$( isEmpty 5 )" == true ]]
-   then
-      echo 5
-   elif [[ "${board[5]}" == $1 && "${board[6]}" == $1 && "$( isEmpty 4 )" == true ]]
-   then
-      echo 4
-   elif [[ "${board[7]}" == $1 && "${board[8]}" == $1 && "$( isEmpty 9 )" == true ]]
-   then
-      echo 9
-   elif [[ "${board[7]}" == $1 && "${board[9]}" == $1 && "$( isEmpty 8 )" == true ]]
-   then
-      echo 8
-   elif [[ "${board[8]}" == $1 && "${board[9]}" == $1 && "$( isEmpty 7 )" == true ]]
-   then
-      echo 7
-   elif [[ "${board[1]}" == $1 && "${board[5]}" == $1 && "$( isEmpty 9 )" == true ]]
-   then
-      echo 9
-   elif [[ "${board[1]}" == $1 && "${board[9]}" == $1 && "$( isEmpty 5 )" == true ]]
-   then
-      echo 5
-   elif [[ "${board[5]}" == $1 && "${board[9]}" == $1 && "$( isEmpty 1 )" == true ]]
-   then
-      echo 1
-   elif [[ "${board[3]}" == $1 && "${board[5]}" == $1 && "$( isEmpty 9 )" == true ]]
-   then
-      echo 9
-   elif [[ "${board[3]}" == $1 && "${board[9]}" == $1 && "$( isEmpty 5 )" == true ]]
-   then
-      echo 5
-   elif [[ "${board[5]}" == $1 && "${board[9]}" == $1 && "$( isEmpty 3 )" == true ]]
-   then
-      echo 3
-fi
-}
-
-#MAKE COMPUTER WIN
-function computerWin(){
-   
+local player=$1
+local row=1
+local result=0
+local column=1
+local cross=1
+while [[ $row -le 9 ]]
+do
+   result=0
+   if [[ "${board[$row]}" == $player && "${board[$(( $row + 1 ))]}" == $player && $( isEmpty $(( $row + 2 )) ) == true ]] 
+      then
+         result=$(( $row + 2 ))
+         break
+   fi
+   if [[ "${board[$row]}" == $player && "${board[$(( $row + 2 ))]}" == $player && $( isEmpty $(( $row + 1 )) ) == true ]] 
+      then
+         result=$(( $row + 1 ))
+         break
+   fi
+   if [[ "${board[$(( $row + 1 ))]}" == $player && "${board[$(( $row + 2 ))]}" == $player && $( isEmpty $row ) == true ]] 
+      then
+         result=$row
+         break
+   fi
+   row=$(( $row + 3 ))
+done
+while [[ $column -le 3 ]]
+do
+   if [[ "${board[$column]}" == $player && "${board[$(( $column + 3 ))]}" == $player && $( isEmpty $(( $column + 6 )) ) == true ]] 
+      then
+         result=$(( $column + 6 ))
+         break
+   fi
+   if [[ "${board[$column]}" == $player && "${board[$(( $column + 6 ))]}" == $player && $( isEmpty $(( $column + 3 )) ) == true ]] 
+      then
+         result=$(( $column + 3 ))
+         break
+   fi
+   if [[ "${board[$(( $column + 3 ))]}" == $player && "${board[$(( $column + 6 ))]}" == $player && $( isEmpty $column ) == true ]] 
+      then
+         result=$column 
+         break
+   fi
+   column=$(( $column + 1 ))
+done
+   if [[ "${board[1]}" == $player && "${board[5]}" == $player && $( isEmpty 9 ) == true ]] 
+      then
+         result=9 
+      elif [[ "${board[1]}" == $player && "${board[9]}" == $player && $( isEmpty 5 ) == true ]] 
+      then
+         result=5 
+      elif [[ "${board[5]}" == $player && "${board[9]}" == $player && $( isEmpty 1 ) == true ]] 
+      then
+         result=1 
+      elif [[ "${board[3]}" == $player && "${board[5]}" == $player && $( isEmpty 7 ) == true ]] 
+      then
+         result=7 
+      elif [[ "${board[3]}" == $player && "${board[7]}" == $player && $( isEmpty 5 ) == true ]] 
+      then
+         result=5 
+      elif [[ "${board[5]}" == $player && "${board[7]}" == $player && $( isEmpty 3 ) == true ]] 
+      then
+         result=3 
+   fi
+echo $result
 }
 
 #SHOW BOARD
@@ -292,10 +291,8 @@ printf "2 - for with computer\n"
 read choice
 case $choice in
    1)
-   board
-   playerAssign
+   playerAssign 1
    ;;
    2)
-   board
-   playerAssignWithComputer
+   playerAssign 2
 esac
