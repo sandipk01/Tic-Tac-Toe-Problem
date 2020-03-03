@@ -131,19 +131,25 @@ if [[ "$( playerName $1 )" == $computer ]]
       printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:\n"
       while [[ $isStop == 0 ]]
       do
-         if [[ "$( computerWin $1 )" == 0 ]]
+         if [[ "$( computerWin $1 )" != 0 ]]
             then
-               randomNumber=$(( ( RANDOM%9 ) + 1 ))
-            else
                randomNumber="$( computerWin $1 )"
-         fi
-            if [[ "${board[$randomNumber]}" != "X" && "${board[$randomNumber]}" != "0" ]]
-               then
-                  isStop=1 
-                  board[$randomNumber]=$1
+               break
+            elif [[ "$( blockplayer $1 )" != 0 ]]
+               then 
+                  randomNumber="$( blockplayer $1 )"
                   break
-            fi
+               else
+                  randomNumber=$(( ( RANDOM%9 ) + 1 ))
+                  break
+         fi
       done
+      if [[ "${board[$randomNumber]}" != "X" && "${board[$randomNumber]}" != "0" ]]
+               then
+                  #isStop=1 
+                  board[$randomNumber]=$1
+                  #break
+            fi
    else
       printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:\n"
       read position
@@ -276,6 +282,13 @@ done
          result=3 
    fi
 echo $result
+}
+
+#COMPUTER BLOCK PLAYER
+function blockplayer()
+{
+   local opponent="$( changePlayer $1 )"
+   echo "$( computerWin $opponent )"
 }
 
 #SHOW BOARD
