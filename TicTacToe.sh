@@ -143,8 +143,8 @@ if [[ "$( playerName $1 )" == $computer ]]
             elif [[ "$( corners )" != 0 ]]
                then
                   result="$( corners )"
-                  #randomNumber=$(( ( RANDOM%9 ) + 1 ))
                   break
+            #elif [[ "$( findMid )"  ]]
             else
                   randomNumber=$(( ( RANDOM%9 ) + 1 ))
                if [[ "$( isEmpty $randomNumber )" == true ]]
@@ -152,13 +152,8 @@ if [[ "$( playerName $1 )" == $computer ]]
                      result=$randomNumber
                fi
          fi
-      done
-      # if [[ "${board[$randomNumber]}" != "X" && "${board[$randomNumber]}" != "0" ]]
-      #          then
-      #             #isStop=1 
+      done 
                   board[$result]=$1
-                  #break
-            # fi
    else
       printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:\n"
       read position
@@ -213,7 +208,6 @@ function checkWin()
    fi
    echo $isWin
 }
-
 #Box IS EMPTY
 function isEmpty()
 {
@@ -240,7 +234,27 @@ function corners()
    done
    echo $result
 }
- 
+#FINDING CENTER POSITION IS AVALIABLE
+function findMidd()
+{
+   local result=0
+   if [[ "$( isEmpty 5 )" == true ]]
+      then 
+         result=5
+   fi
+   echo $result
+}
+
+# function findAnyEmptyPosition()
+# {
+#    local result=0
+#    local index=1
+#    while [[ $index <= 9 ]]
+#    do
+
+#    done
+# }
+
 #MAKE COMPUTER WIN
 function computerWin(){
 local player=$1
@@ -329,6 +343,8 @@ printf "2 - for with computer\n"
 read choice
 case $choice in
    1)
+   echo ${#board[@]}
+   echo $(( 9/2 ))
    playerAssign 1
    ;;
    2)
