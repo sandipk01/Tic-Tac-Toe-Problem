@@ -19,7 +19,7 @@ player2Sign=""
 turnCount=0
 computer="computer"
 currentPlayer=""
-
+corner=(1 3 7 9)
 #ASSIGNED SIGN TO FIRST AND SECOND PLAYER
 function playerAssign(){
    local gameMode=$1
@@ -125,6 +125,7 @@ board
 function play(){
 board
 local isStop=0
+local result=0
 #COMPUTER PLAY
 if [[ "$( playerName $1 )" == $computer ]]
    then
@@ -133,23 +134,31 @@ if [[ "$( playerName $1 )" == $computer ]]
       do
          if [[ "$( computerWin $1 )" != 0 ]]
             then
-               randomNumber="$( computerWin $1 )"
+               result="$( computerWin $1 )"
                break
             elif [[ "$( blockplayer $1 )" != 0 ]]
                then 
-                  randomNumber="$( blockplayer $1 )"
+                  result="$( blockplayer $1 )"
                   break
-               else
+            elif [[ "$( corners )" != 0 ]]
+               then
+                  result="$( corners )"
+                  #randomNumber=$(( ( RANDOM%9 ) + 1 ))
+                  break
+            else
                   randomNumber=$(( ( RANDOM%9 ) + 1 ))
-                  break
+               if [[ "$( isEmpty $randomNumber )" == true ]]
+                  then
+                     result=$randomNumber
+               fi
          fi
       done
-      if [[ "${board[$randomNumber]}" != "X" && "${board[$randomNumber]}" != "0" ]]
-               then
-                  #isStop=1 
-                  board[$randomNumber]=$1
+      # if [[ "${board[$randomNumber]}" != "X" && "${board[$randomNumber]}" != "0" ]]
+      #          then
+      #             #isStop=1 
+                  board[$result]=$1
                   #break
-            fi
+            # fi
    else
       printf "$( playerName $1 ) now its your turn ( $1 ) please enter the Position:\n"
       read position
@@ -215,7 +224,23 @@ function isEmpty()
          echo false
    fi
 }
-
+#CHECK CORNERS ARE AVAILABLE
+function corners()
+{
+   local index=0
+   local result=0
+   while [[ $index -le 3 ]]
+   do
+      if [[ "$( isEmpty ${corner[$index]} )" == true ]]
+         then
+            result="${corner[$index]}"
+            break
+      fi
+      (( index++ ))
+   done
+   echo $result
+}
+ 
 #MAKE COMPUTER WIN
 function computerWin(){
 local player=$1
