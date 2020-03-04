@@ -148,12 +148,15 @@ if [[ "$( playerName $1 )" == $computer ]]
                then
                   result="$( findMid )"
                   break
-            else
-                  randomNumber=$(( ( RANDOM%9 ) + 1 ))
-               if [[ "$( isEmpty $randomNumber )" == true ]]
-                  then
-                     result=$randomNumber
-               fi
+            elif [[ "$( findAnyEmptyPosition )" != 0 ]]
+               then
+                  result="$( findAnyEmptyPosition )"
+                  break
+               #    randomNumber=$(( ( RANDOM%9 ) + 1 ))
+               # if [[ "$( isEmpty $randomNumber )" == true ]]
+               #    then
+               #       result=$randomNumber
+               # fi
          fi
       done 
                   board[$result]=$1
