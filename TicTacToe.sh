@@ -51,7 +51,6 @@ function playerAssign(){
    printf "$player2Name = $player2Sign is Assigned\n"
    begin
 }
-
 #CHECK PLAYER NAME WITH SIGN
 function playerName(){
 if [[ $1 == $player1Sign ]]
@@ -61,7 +60,6 @@ if [[ $1 == $player1Sign ]]
       echo $player2Name
 fi
 }
-
 #CHANGE PLAYER SIGN
 function changePlayer(){
    if [[ $1 == $player1Sign ]]
@@ -71,38 +69,37 @@ function changePlayer(){
          echo $player1Sign
    fi
 }
- 
 #BEGIN GAME
 function begin(){
-local isWin=0
-#LOOPING TILL ALL POSITION NOT GETS FULL
-while [ $turnCount -ne 9 ]
-do 
-   #WHO IS PLAYING FIRST
-   if [ $turnCount -eq 0 ]
-      then
-         randomNumber=$(( RANDOM%2 ))
-         if [ $randomNumber -eq 0 ]
-            then
-               currentPlayer=$player1Sign
-               play $player1Sign 
-            else  
-               currentPlayer=$player2Sign
-               play $player2Sign
-         fi
-         (( turnCount++ ))
-      else 
-        #SWITCHING PLAYER
-        currentPlayer="$( changePlayer $currentPlayer )"
-        #CHECK IF PLAYER IS WIN
-        isWin="$( checkWin $currentPlayer )"
-         if [[ $isWin == 1 ]]
-            then
-               printf "$( playerName $currentPlayer ) is Winner\n"
-               break
-            else
-               play $currentPlayer
-               isWin="$( checkWin $currentPlayer )"
+   local isWin=0
+   #LOOPING TILL ALL POSITION NOT GETS FULL
+   while [ $turnCount -ne 9 ]
+   do 
+      #WHO IS PLAYING FIRST
+      if [ $turnCount -eq 0 ]
+         then
+            randomNumber=$(( RANDOM%2 ))
+            if [ $randomNumber -eq 0 ]
+               then
+                  currentPlayer=$player1Sign
+                  play $player1Sign 
+               else  
+                  currentPlayer=$player2Sign
+                  play $player2Sign
+            fi
+               (( turnCount++ ))
+         else 
+            #SWITCHING PLAYER
+            currentPlayer="$( changePlayer $currentPlayer )"
+            #CHECK IF PLAYER IS WIN
+            isWin="$( checkWin $currentPlayer )"
+            if [[ $isWin == 1 ]]
+               then
+                  printf "$( playerName $currentPlayer ) is Winner\n"
+                  break
+               else
+                  play $currentPlayer
+                  isWin="$( checkWin $currentPlayer )"
                   if [[ $isWin == 1 ]]
                      then
                         printf "$( playerName $currentPlayer ) is Winner\n"
@@ -110,15 +107,15 @@ do
                      else
                         (( turnCount++ ))
                   fi
-         fi      
-   fi
-   isWin=0
-done
+             fi      
+       fi
+         isWin=0
+   done
    if [[ $isWin == 0 ]]
       then
          printf "Match is Tie\n"
    fi
-board
+   board
 }
 
 #PLAY
@@ -152,11 +149,6 @@ if [[ "$( playerName $1 )" == $computer ]]
                then
                   result="$( findAnyEmptyPosition )"
                   break
-               #    randomNumber=$(( ( RANDOM%9 ) + 1 ))
-               # if [[ "$( isEmpty $randomNumber )" == true ]]
-               #    then
-               #       result=$randomNumber
-               # fi
          fi
       done 
                   board[$result]=$1
@@ -178,7 +170,6 @@ if [[ "$( playerName $1 )" == $computer ]]
       fi
 fi
 }
-
 #CHECK WINNER OR TIE
 function checkWin()
 {
@@ -268,50 +259,50 @@ function findAnyEmptyPosition()
 }
 #MAKE COMPUTER WIN
 function computerWin(){
-local player=$1
-local row=1
-local result=0
-local column=1
-local cross=1
-while [[ $row -le 9 ]]
-do
-   result=0
-   if [[ "${board[$row]}" == $player && "${board[$(( $row + 1 ))]}" == $player && $( isEmpty $(( $row + 2 )) ) == true ]] 
-      then
-         result=$(( $row + 2 ))
-         break
-   fi
-   if [[ "${board[$row]}" == $player && "${board[$(( $row + 2 ))]}" == $player && $( isEmpty $(( $row + 1 )) ) == true ]] 
+   local player=$1
+   local row=1
+   local result=0
+   local column=1
+   local cross=1
+   while [[ $row -le 9 ]]
+   do
+      result=0
+      if [[ "${board[$row]}" == $player && "${board[$(( $row + 1 ))]}" == $player && $( isEmpty $(( $row + 2 )) ) == true ]] 
+         then
+            result=$(( $row + 2 ))
+            break
+      fi
+      if [[ "${board[$row]}" == $player && "${board[$(( $row + 2 ))]}" == $player && $( isEmpty $(( $row + 1 )) ) == true ]] 
       then
          result=$(( $row + 1 ))
          break
-   fi
-   if [[ "${board[$(( $row + 1 ))]}" == $player && "${board[$(( $row + 2 ))]}" == $player && $( isEmpty $row ) == true ]] 
+      fi
+      if [[ "${board[$(( $row + 1 ))]}" == $player && "${board[$(( $row + 2 ))]}" == $player && $( isEmpty $row ) == true ]] 
       then
          result=$row
          break
-   fi
-   row=$(( $row + 3 ))
-done
-while [[ $column -le 3 ]]
-do
-   if [[ "${board[$column]}" == $player && "${board[$(( $column + 3 ))]}" == $player && $( isEmpty $(( $column + 6 )) ) == true ]] 
-      then
-         result=$(( $column + 6 ))
-         break
-   fi
-   if [[ "${board[$column]}" == $player && "${board[$(( $column + 6 ))]}" == $player && $( isEmpty $(( $column + 3 )) ) == true ]] 
+      fi
+      row=$(( $row + 3 ))
+   done
+   while [[ $column -le 3 ]]
+   do
+      if [[ "${board[$column]}" == $player && "${board[$(( $column + 3 ))]}" == $player && $( isEmpty $(( $column + 6 )) ) == true ]] 
+         then
+            result=$(( $column + 6 ))
+            break
+      fi
+      if [[ "${board[$column]}" == $player && "${board[$(( $column + 6 ))]}" == $player && $( isEmpty $(( $column + 3 )) ) == true ]] 
       then
          result=$(( $column + 3 ))
          break
-   fi
-   if [[ "${board[$(( $column + 3 ))]}" == $player && "${board[$(( $column + 6 ))]}" == $player && $( isEmpty $column ) == true ]] 
-      then
+      fi
+      if [[ "${board[$(( $column + 3 ))]}" == $player && "${board[$(( $column + 6 ))]}" == $player && $( isEmpty $column ) == true ]] 
+         then
          result=$column 
          break
-   fi
-   column=$(( $column + 1 ))
-done
+      fi
+         column=$(( $column + 1 ))
+   done
    if [[ "${board[1]}" == $player && "${board[5]}" == $player && $( isEmpty 9 ) == true ]] 
       then
          result=9 
@@ -330,24 +321,22 @@ done
       elif [[ "${board[5]}" == $player && "${board[7]}" == $player && $( isEmpty 3 ) == true ]] 
       then
          result=3 
-   fi
-echo $result
+   fi 
+   echo $result
 }
-
 #COMPUTER BLOCK PLAYER
 function blockplayer()
 {
    local opponent="$( changePlayer $1 )"
    echo "$( computerWin $opponent )"
 }
-
 #SHOW BOARD
 function board(){
-printf " ${board[1]}  |  ${board[2]}  |  ${board[3]} \n"
-printf " ${board[4]}  |  ${board[5]}  |  ${board[6]} \n"
-printf " ${board[7]}  |  ${board[8]}  |  ${board[9]} \n"
+   printf " ${board[1]}  |  ${board[2]}  |  ${board[3]} \n"
+   printf " ${board[4]}  |  ${board[5]}  |  ${board[6]} \n"
+   printf " ${board[7]}  |  ${board[8]}  |  ${board[9]} \n"
 }
-
+#START OPTIONS
 printf "you want to play with human or computer?\n"
 printf "1 - for with human\n"
 printf "2 - for with computer\n"
