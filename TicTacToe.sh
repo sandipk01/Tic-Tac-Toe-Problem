@@ -144,7 +144,10 @@ if [[ "$( playerName $1 )" == $computer ]]
                then
                   result="$( corners )"
                   break
-            #elif [[ "$( findMid )"  ]]
+            elif [[ "$( findMid )" != 0 ]]
+               then
+                  result="$( findMid )"
+                  break
             else
                   randomNumber=$(( ( RANDOM%9 ) + 1 ))
                if [[ "$( isEmpty $randomNumber )" == true ]]
@@ -244,17 +247,22 @@ function findMidd()
    fi
    echo $result
 }
-
-# function findAnyEmptyPosition()
-# {
-#    local result=0
-#    local index=1
-#    while [[ $index <= 9 ]]
-#    do
-
-#    done
-# }
-
+#FIND ANY EMPTY POSITION ON BOARD
+function findAnyEmptyPosition()
+{
+   local result=0
+   local index=1
+   while [[ $index -le 9 ]]
+   do
+      if [[ "$( isEmpty $index )" == true ]]
+         then
+            result=$index
+            break
+      fi
+      (( index++ ))
+   done
+   echo $result
+}
 #MAKE COMPUTER WIN
 function computerWin(){
 local player=$1
